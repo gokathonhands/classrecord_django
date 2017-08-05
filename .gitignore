@@ -1,6 +1,7 @@
 nohup.out
 .DS_Store
 .idea/*
+templates/*
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
