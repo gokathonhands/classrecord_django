@@ -12,11 +12,10 @@ class Semester(models.Model):
         ordering = ('year', 'season',)
 
     def __str__(self):
-        return self.year + self.season
+        return str(self.year) + str(self.season)
 
 class Course(models.Model):
-    # user = models.ForeignKey('auth.User', default=1)
-    semester_id = models.ForeignKey('api.Semester')
+    semester = models.ForeignKey('api.Semester')
     name = models.CharField(max_length=100, default="공학수학")
     created = models.DateTimeField(auto_now_add=True)
 
@@ -25,3 +24,14 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+class MyCourse(models.Model):
+    # user_id = models.ForeignKey('auth.User', default=1)
+    course = models.ForeignKey('api.Course')
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.course__name
