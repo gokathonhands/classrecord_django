@@ -1,8 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from api.models import Semester, Course, MyCourse
+from api.models import Semester, Course
 
 admin.site.register(Semester)
 admin.site.register(Course)
-admin.site.register(MyCourse)

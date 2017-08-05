@@ -45,6 +45,7 @@ TIME_CHOICES = (
 )
 
 class Course(models.Model):
+    user = models.ForeignKey('auth.User', default=1)
     year = models.IntegerField(choices=YEAR_CHOICES, default=2017)
     term = models.CharField(choices=TERM_CHOICES, max_length=3, default="2R")
     courseCode = models.CharField(max_length=13, default="KECE109")
@@ -53,23 +54,24 @@ class Course(models.Model):
     startTime = models.IntegerField(choices=TIME_CHOICES, default=1)
     endTime = models.IntegerField(choices=TIME_CHOICES, default=1)
     buildingName = models.CharField(max_length=30, default="")
+    roomType = models.CharField(max_length=30, default="")
+    roomName = models.CharField(max_length=50, default="")
     profName = models.CharField(max_length=20, default="")
     created = models.DateTimeField(auto_now_add=True)
-
     class Meta:
         ordering = ('courseName',)
 
     def __str__(self):
         return self.courseName
 
-class MyCourse(models.Model):
-    semester = models.ForeignKey('api.Semester', default=1)
-    user_id = models.ForeignKey('auth.User', default=1)
-    course = models.ForeignKey('api.Course')
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ('course__courseName',)
-
-    def __str__(self):
-        return self.course.courseName
+# class MyCourse(models.Model):
+#     semester = models.ForeignKey('api.Semester', default=1)
+#     user_id = models.ForeignKey('auth.User', default=1)
+#     course = models.ForeignKey('api.Course')
+#     created = models.DateTimeField(auto_now_add=True)
+#
+#     class Meta:
+#         ordering = ('course__courseName',)
+#
+#     def __str__(self):
+#         return self.course.courseName
