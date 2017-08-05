@@ -53,9 +53,10 @@ class Course(models.Model):
     startTime = models.IntegerField(choices=TIME_CHOICES, default=1)
     endTime = models.IntegerField(choices=TIME_CHOICES, default=1)
     buildingName = models.CharField(max_length=30, default="")
+    roomType = models.CharField(max_length=30, default="")
+    roomName = models.CharField(max_length=50, default="")
     profName = models.CharField(max_length=20, default="")
     created = models.DateTimeField(auto_now_add=True)
-
     class Meta:
         ordering = ('courseName',)
 
