@@ -8,13 +8,12 @@ from api.models import Semester
 from api.serializers import SemesterSerializer
 
 
-class SeasonList(ListCreateAPIView):
+class SemesterList(ListCreateAPIView):
     # permission_classes = (IsAuthenticated, )
     queryset = Semester.objects.all()
     serializer_class = SemesterSerializer
 
-class SeasonDetail(RetrieveUpdateDestroyAPIView):
+class SemesterDetail(RetrieveUpdateDestroyAPIView):
     # permission_classes = (IsAuthenticated, )
     queryset = Semester.objects.all()
     serializer_class = SemesterSerializer
-
