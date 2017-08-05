@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import Semester, Course, MyCourse
+from api.models import Semester, Course
 
 
 class SemesterSerializer(serializers.ModelSerializer):
@@ -15,12 +15,4 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = (
             '__all__'
-        )
-
-class MyCourseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MyCourse
-        fields = (
-            'course',
-            'semester',
         )
