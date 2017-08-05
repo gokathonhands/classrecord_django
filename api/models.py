@@ -73,17 +73,14 @@ class Course(models.Model):
 class Record(models.Model):
     user = models.ForeignKey('auth.User', default=1)
     course = models.ForeignKey('api.Course', default=1)
-    title = models.CharField(verbose_name='Title', default='', max_length=255)
-    duration = models.CharField(verbose_name='Duration', default='00:00', max_length=100)
     filename = models.CharField(verbose_name='Filename', default=None, max_length=255)
-    file = models.FileField(verbose_name='File', default=None)
+    file = models.FileField(upload_to="templates/records/", verbose_name='File', default=None)
 
     is_uploaded = models.BooleanField(default=False)
     is_converted = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    url = models.URLField(default="")
 
     class Meta:
         ordering = ('course__courseName',)

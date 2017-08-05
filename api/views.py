@@ -87,18 +87,24 @@ class RecordListCreate(ListCreateAPIView):
         else:
             return Record.objects.filter(user=self.request.user).order_by('-id')
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer, course, filename):
         serializer.save(
             user=self.request.user,
+            filename=filename,
+            course=course
         )
 
     def post(self, request, *args, **kwargs):
         if 'voice' in request.FILES:
             request.data['file'] = request.FILES['voice']
 
+        course = Course.objects.all().get(id=request.data['courseId'])
+        filename = request.data['filename']
+
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        serializer.is_valid()
+        self.perform_create(serializer, course=course,
+                                         filename=filename)
         headers = self.get_success_headers(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
