@@ -95,8 +95,6 @@ class RecordListCreate(ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if 'voice' in request.FILES:
             request.data['file'] = request.FILES['voice']
-        if 'file' in request.data:
-            request.data['is_uploaded'] = True
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
