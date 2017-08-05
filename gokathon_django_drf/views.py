@@ -2,4 +2,4 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, 'real/static/views/index.html')
+    return render(request, 'ClassRecode_Web2/static/views/index.html')
