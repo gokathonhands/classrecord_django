@@ -1,8 +1,11 @@
+import json
+
 from django.contrib.auth.models import User
 from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import mixins, generics, status
+from rest_framework.decorators import api_view
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -108,3 +111,56 @@ class RecordRetrieveDeleteUpdate(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+@api_view(['GET', ])
+def initialize_course(request):
+    if request.user.is_anonymous():
+        return Response({"message": "Bad Request, check Authorization Token"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    portal_account_fieldname = 'portalaccount'
+    portal_pw_fieldname = 'password'
+    if not portal_account_fieldname in request.GET or \
+        not portal_pw_fieldname in request.GET:
+        return Response({"message": "Bad Request, check querys"}, status=status.HTTP_400_BAD_REQUEST)
+
+    portal_account = request.GET[portal_account_fieldname]
+    portal_pw = request.GET[portal_pw_fieldname]
+
+    import requests
+    querys = {"client_id": "ku_it_fellow_student_app",
+              "username": portal_account,
+              "password": portal_pw,
+              "grant_type": "password"
+              }
+    url = "https://openapi.korea.ac.kr/oauth/token"
+    r = requests.get(url, params=querys, timeout=1)
+    if r.status_code != 200:
+        return Response({"message": "Wrong account, password"}, status=status.HTTP_400_BAD_REQUEST)
+
+    access_token = r.json()['access_token']
+
+    url = "https://openapi.korea.ac.kr/api/timetable"
+    querys = {"format": "json",
+              "year": 2017,
+              "term": "1R",
+              "access_token": access_token
+              }
+
+    r = requests.get(url, params=querys, timeout=1)
+    jsonresponse = r.json()
+    if r.status_code != 200:
+        return Response({"message": "Unknown error"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    if 'response' in jsonresponse:
+        temp = jsonresponse['response']
+        if 'data' in temp:
+            courses = temp['data']
+            for course in courses:
+                serializer = CourseSerializer()
+                course['user'] = request.user
+                serializer.create(validated_data=course)
+
+    view = CourseList.as_view()
+
+    return view(request)

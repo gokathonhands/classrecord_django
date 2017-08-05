@@ -15,8 +15,8 @@ class Semester(models.Model):
         return str(self.year) + str(self.season)
 
 YEAR_CHOICES = (
-    (17, 2017),
-    (16, 2016),
+    (2017, 17),
+    (2016, 16),
 )
 
 TERM_CHOICES = (
@@ -25,11 +25,13 @@ TERM_CHOICES = (
 )
 
 DAY_CHOICES = (
-    (0,"월"),
-    (1,"화"),
-    (2,"수"),
-    (3,"목"),
-    (4,"금"),
+    (0,"일"),
+    (1,"월"),
+    (2,"화"),
+    (3,"수"),
+    (4,"목"),
+    (5,"금"),
+    (6,"토"),
 )
 
 TIME_CHOICES = (
@@ -42,6 +44,7 @@ TIME_CHOICES = (
     (7, "7교시"),
     (8, "8교시"),
     (9, "9교시"),
+    (99, "0교시"),
 )
 
 class Course(models.Model):
@@ -49,14 +52,16 @@ class Course(models.Model):
     year = models.IntegerField(choices=YEAR_CHOICES, default=2017)
     term = models.CharField(choices=TERM_CHOICES, max_length=3, default="2R")
     courseCode = models.CharField(max_length=13, default="KECE109")
+    courseClass = models.CharField(max_length=4, default="00")
     courseName = models.CharField(max_length=30, default="공학수학")
+    roomCode = models.CharField(max_length=10, default="99999")
     day = models.IntegerField(choices=DAY_CHOICES, default=0)
     startTime = models.IntegerField(choices=TIME_CHOICES, default=1)
     endTime = models.IntegerField(choices=TIME_CHOICES, default=1)
-    buildingName = models.CharField(max_length=30, default="")
-    roomType = models.CharField(max_length=30, default="")
-    roomName = models.CharField(max_length=50, default="")
-    profName = models.CharField(max_length=20, default="")
+    buildingName = models.CharField(max_length=30, default="", null=True)
+    roomType = models.CharField(max_length=30, default="", null=True)
+    roomName = models.CharField(max_length=50, default="", null=True)
+    profName = models.CharField(max_length=20, default="", null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
