@@ -58,11 +58,33 @@ class Course(models.Model):
     roomName = models.CharField(max_length=50, default="")
     profName = models.CharField(max_length=20, default="")
     created = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         ordering = ('courseName',)
 
     def __str__(self):
         return self.courseName
+
+class Record(models.Model):
+    user = models.ForeignKey('auth.User', default=1)
+    course = models.ForeignKey('api.Course', default=1)
+    title = models.CharField(verbose_name='Title', default='', max_length=255)
+    duration = models.CharField(verbose_name='Duration', default='00:00', max_length=100)
+    filename = models.CharField(verbose_name='Filename', default=None, max_length=255)
+    file = models.FileField(verbose_name='File', default=None)
+
+    is_uploaded = models.BooleanField(default=False)
+    is_converted = models.BooleanField(default=False)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    url = models.URLField(default="")
+
+    class Meta:
+        ordering = ('course__courseName',)
+
+    def __str__(self):
+        return self.course.courseName + str(self.id)
 
 # class MyCourse(models.Model):
 #     semester = models.ForeignKey('api.Semester', default=1)

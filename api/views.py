@@ -7,8 +7,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from api.models import Semester, Course
-from api.serializers import SemesterSerializer, CourseSerializer, UserSerializer
+from api.models import Semester, Course, Record
+from api.serializers import SemesterSerializer, CourseSerializer, UserSerializer, RecordSerializer
 
 
 class SemesterList(ListCreateAPIView):
@@ -28,6 +28,11 @@ class CourseList(ListCreateAPIView):
             return Course.objects.all().order_by('-id')
         else:
             return Course.objects.filter(user=self.request.user).order_by('-id')
+
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user,
+        )
 
 class CourseDetail(RetrieveUpdateDestroyAPIView):
     queryset = Course.objects.all()
@@ -69,3 +74,37 @@ class UserGetOrCreate(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return self.create(request, *args, **kwargs)
+
+class RecordListCreate(ListCreateAPIView):
+    serializer_class = RecordSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            return Record.objects.all().order_by('-id')
+        else:
+            return Record.objects.filter(user=self.request.user).order_by('-id')
+
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user,
+        )
+
+    def post(self, request, *args, **kwargs):
+        if 'voice' in request.FILES:
+            request.data['file'] = request.FILES['voice']
+        if 'file' in request.data:
+            request.data['is_uploaded'] = True
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class RecordRetrieveDeleteUpdate(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Record.objects.all()
+    serializer_class = RecordSerializer
+
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)

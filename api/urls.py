@@ -8,4 +8,6 @@ urlpatterns = [
     url(r'^semester/(?P<pk>[0-9]+)$', views.SemesterDetail.as_view()),
     url(r'^course/$', views.CourseList.as_view()),
     url(r'^course/(?P<pk>[0-9]+)$', views.CourseDetail.as_view()),
+    url(r'^records$', views.RecordListCreate.as_view()),
+    url(r'^records/(?P<pk>[\d]+)$', views.RecordRetrieveDeleteUpdate.as_view()),
 ]
