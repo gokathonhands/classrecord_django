@@ -48,12 +48,12 @@ class Course(models.Model):
     year = models.IntegerField(choices=YEAR_CHOICES, default=2017)
     term = models.CharField(choices=TERM_CHOICES, max_length=3, default="2R")
     courseCode = models.CharField(max_length=13, default="KECE109")
-    courseName = models.CharField(max_length=3, default="공학수학")
+    courseName = models.CharField(max_length=30, default="공학수학")
     day = models.IntegerField(choices=DAY_CHOICES, default=0)
     startTime = models.IntegerField(choices=TIME_CHOICES, default=1)
     endTime = models.IntegerField(choices=TIME_CHOICES, default=1)
-    buildingName = models.CharField(max_length=30, default=1)
-    profName = models.CharField(max_length=20, default=1)
+    buildingName = models.CharField(max_length=30, default="")
+    profName = models.CharField(max_length=20, default="")
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
