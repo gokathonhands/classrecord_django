@@ -4,7 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import mixins, generics, status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from api.models import Semester, Course
@@ -17,19 +17,26 @@ class SemesterList(ListCreateAPIView):
     serializer_class = SemesterSerializer
 
 class SemesterDetail(RetrieveUpdateDestroyAPIView):
-    # permission_classes = (IsAuthenticated, )
     queryset = Semester.objects.all()
     serializer_class = SemesterSerializer
 
 class CourseList(ListCreateAPIView):
-    # permission_classes = (IsAuthenticated, )
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            return Course.objects.all().order_by('-id')
+        else:
+            return Course.objects.filter(user=self.request.user).order_by('-id')
 
 class CourseDetail(RetrieveUpdateDestroyAPIView):
-    # permission_classes = (IsAuthenticated, )
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            return Course.objects.all()
+        else:
+            return Course.objects.filter(user=self.request.user)
 
 
 class UserGetOrCreate(generics.CreateAPIView):
