@@ -24,14 +24,14 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
-
-class MyCourse(models.Model):
-    # user_id = models.ForeignKey('auth.User', default=1)
-    course = models.ForeignKey('api.Course')
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __str__(self):
-        return self.course__name
+#
+# class MyCourse(models.Model):
+#     # user_id = models.ForeignKey('auth.User', default=1)
+#     course = models.ForeignKey('api.Course')
+#     created = models.DateTimeField(auto_now_add=True)
+#
+#     class Meta:
+#         ordering = ('name',)
+#
+#     def __str__(self):
+#         return self.course__name
