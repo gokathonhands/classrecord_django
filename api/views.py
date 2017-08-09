@@ -146,7 +146,7 @@ def initialize_course(request):
     url = "https://openapi.korea.ac.kr/api/timetable"
     querys = {"format": "json",
               "year": 2017,
-              "term": "1R",
+              "term": "2R",
               "access_token": access_token
               }
 
